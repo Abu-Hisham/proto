@@ -1,7 +1,14 @@
 #!/usr/bin/env python 3
-import os
-from time import gmtime
+"""
+This script This simple python script performs the following tasks
+    -  Fetches data from the database
+    - Opens an Excel Workbook
+    - Creates a new Spreadsheet (Names the spreadsheet using the Time stamp DD-MM-YYYY H-M-S)
+    - Appends the Data to the new sheet
+    - Saves the workbook and emails it automatically to the specified recipients (in the program)
+"""
 
+import os
 import xlrd
 import xlwt
 import sqlite3
@@ -14,13 +21,18 @@ from mimetypes import guess_type
 from email.encoders import encode_base64
 from xlutils.copy import copy
 
+# Edit this path to point to your location of the proto_database.sqlite file
+# eg C:\Users\<Username>\Desktop\proto\proto_database.sqlite
 db = sqlite3.connect(r'C:\Users\Abdulaziz\Downloads\proto_database.sqlite')
 
 
 def save_excel_data_to_db():
     # Open the workbook and define the worksheet
     cursor = db.cursor()
-    book = xlrd.open_workbook(r"C:\Users\Abdulaziz\Desktop\proto.xlsx")
+
+    # Edit this path to point to your location of the proto.xls file
+    # eg C:\Users\<Username>\Desktop\proto\proto.xls
+    book = xlrd.open_workbook(r"C:\Users\Abdulaziz\Desktop\proto.xls")
     sheet = book.sheet_by_index(0)
     query = """INSERT INTO users (FIRSTNAME,LASTNAME,OTHERNAME,AGE) VALUES (?, ?, ?, ?)"""
     for r in range(1, sheet.nrows):
@@ -50,11 +62,13 @@ def fetch_data_from_db():
     cursor = db.cursor()
     cursor.execute("SELECT * FROM users")
     rowNum = 1  # keep track of rows
+
     # print all the cells of the row to excel sheet
+    # Edit this path to point to your location of the proto.xls file
+    # eg C:\Users\<Username>\Desktop\proto\proto.xls
     book = xlrd.open_workbook(r"C:\Users\Abdulaziz\Desktop\proto.xls")
     wb = copy(book)
     sheetName = datetime.datetime.today().strftime("%Y-%m-%d %H-%M-%S")
-    #sheetName = datetime.datetime.now().timestamp()
     sheet = wb.add_sheet(sheetName)
     #write column headers
     sheet.write(0, 0, "ID")
@@ -69,6 +83,9 @@ def fetch_data_from_db():
             sheet.write(rowNum, colNum, col)  # row, column, value
             colNum += 1
         rowNum = rowNum + 1
+
+    # Edit this path to point to your location of the proto.xls file
+    # eg C:\Users\<Username>\Desktop\proto\proto.xls
     wb.save(r"C:\Users\Abdulaziz\Desktop\proto.xls")
     cursor.close()
 
@@ -107,9 +124,17 @@ def email_excel_data(username, password, emailTo, msg, attachments):
 
 
 def main():
-    # save_excel_data_to_db()
+    # Edit this path to point to your location of the proto.xls file
+    # eg C:\Users\<Username>\Desktop\proto\proto.xls
+
     attachments = [r"C:\Users\Abdulaziz\Desktop\proto.xls"]
-    email_excel_data("abdulmoha786@gmail.com", "ms@mbano786", "abdulmoha786@gmail.com", "Hello Zizu", attachments)
+
+    # Edit the below methods arguments to match your credentials
+    # 1 Your Username(Email address specifically Gmail)
+    # 2 Your Password
+    # 3 The Recipient Email Address(Include the same as yours for testing purposes)
+    # 4 The Message to be included in the body
+    email_excel_data("abdulmoha786@gmail.com", "*********", "abdulmoha786@gmail.com", "Hello Zizu, Here is your excel file", attachments)
 
 
 if __name__ == "__main__":
