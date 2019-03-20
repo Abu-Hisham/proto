@@ -107,9 +107,9 @@ def email_excel_data(username, password, emailTo, msg, attachments):
 
 
 def main():
-    save_excel_data_to_db()
-    # attachments = [r"C:\Users\Abdulaziz\Desktop\proto.xls"]
-    # email_excel_data("abdulmoha786@gmail.com", "ms@mbano786", "abdulmoha786@gmail.com", "Hello Zizu", attachments)
+    # save_excel_data_to_db()
+    attachments = [r"C:\Users\Abdulaziz\Desktop\proto.xls"]
+    email_excel_data("abdulmoha786@gmail.com", "ms@mbano786", "abdulmoha786@gmail.com", "Hello Zizu", attachments)
 
 
 if __name__ == "__main__":
